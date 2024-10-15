@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המלצה על מנהל/ת פורצ/ת דרך לשנת הלימודים תשפ"ה</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .field {
+            margin-bottom: 10px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], textarea, input[type="email"], input[type="date"] {
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+        }
+        textarea {
+            height: 150px;
+        }
+        #submitBtn, #printBtn {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #submitBtn:hover, #printBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <form id="recommendationForm">
+        <h1>המלצה על מנהל/ת פורצ/ת דרך לשנת הלימודים תשפ"ה</h1>
+       
+        <div class="section">
+            <h2>פרטים כלליים על המנהל/ת המועמד/ת</h2>
+            <div class="field">
+                <label for="name">שם המנהל/ת:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="field">
+                <label for="phone">טלפון נייד:</label>
+                <input type="text" id="phone" name="phone" required>
+            </div>
+            <div class="field">
+                <label for="email">כתובת דוא"ל:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="field">
+                <label for="years_managing">מספר שנות ניהול המוסד:</label>
+                <input type="text" id="years_managing" name="years_managing" required>
+            </div>
+            <div class="field">
+                <label for="total_experience">ותק כללי בניהול:</label>
+                <input type="text" id="total_experience" name="total_experience" required>
+            </div>
+        </div>
+       
+        <div class="section">
+            <h2>פרטים על המוסד החינוכי</h2>
+            <div class="field">
+                <label for="institution_name">שם המוסד:</label>
+                <input type="text" id="institution_name" name="institution_name" required>
+            </div>
+            <div class="field">
+                <label for="authority">רשות:</label>
+                <input type="text" id="authority" name="authority" required>
+            </div>
+            <div class="field">
+                <label for="district">מחוז:</label>
+                <input type="text" id="district" name="district" required>
+            </div>
+            <div class="field">
+                <label for="supervisor">שם המפקח על המוסד:</label>
+                <input type="text" id="supervisor" name="supervisor" required>
+            </div>
+            <div class="field">
+                <label for="supervision_type">פיקוח (מ"מ, ממ"ד, חרדי, אחר):</label>
+                <input type="text" id="supervision_type" name="supervision_type" required>
+            </div>
+            <div class="field">
+                <label for="grade_levels">דרגות הכיתה:</label>
+                <input type="text" id="grade_levels" name="grade_levels" required>
+            </div>
+            <div class="field">
+                <label for="num_classes">מספר הכיתות:</label>
+                <input type="text" id="num_classes" name="num_classes" required>
+            </div>
+            <div class="field">
+                <label for="special_frameworks">מסגרות מיוחדות בבית הספר:</label>
+                <input type="text" id="special_frameworks" name="special_frameworks" required>
+            </div>
+            <div class="field">
+                <label for="num_students">מספר התלמידים:</label>
+                <input type="text" id="num_students" name="num_students" required>
+            </div>
+        </div>
+       
+        <div class="section">
+            <h2>המלצה כללית</h2>
+            <div class="field">
+                <label for="recommendation">תארו בפירוט את התרשמותכם מהמנהל/ת ואת הסיבות המרכזיות להמלצה:</label>
+                <textarea id="recommendation" name="recommendation" required></textarea>
+            </div>
+        </div>
+       
+        <div class="section">
+            <div class="field">
+                <label for="recommenders">שמות הממליצים ותפקידיהם:</label>
+                <input type="text" id="recommenders" name="recommenders" required>
+            </div>
+            <div class="field">
+                <label for="signatures">חתימות הממליצים:</label>
+                <input type="text" id="signatures" name="signatures" required>
+            </div>
+            <div class="field">
+                <label for="date">תאריך:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+        </div>
+
+        <!-- הוספת כפתור הדפסה -->
+        <button type="button" id="printBtn" onclick="printForm()">הדפס את הטופס</button>
+
+        <button type="submit" id="submitBtn">שלח טופס</button>
+    </form>
+
+    <script>
+        function printForm() {
+            window.print();
+        }
+
+        document.getElementById('recommendationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+           
+            var formData = new FormData(this);
+            var body = '';
+            for (var pair of formData.entries()) {
+                body += pair[0] + ': ' + pair[1] + '\n';
+            }
+
+            var mailtoLink = 'mailto:ronenco@education.gov.il'
+                + '?subject=' + encodeURIComponent('המלצה על מנהל/ת פורצ/ת דרך לשנת הלימודים תשפ"ה')
+                + '&body=' + encodeURIComponent(body);
+
+            window.location.href = mailtoLink;
+        });
+    </script>
+</body>
+</html>
