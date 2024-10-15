@@ -5,55 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>המלצה על מנהל/ת פורצ/ת דרך לשנת הלימודים תשפ"ה</title>
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         h1, h2 {
-            color: #333;
+            color: var(--primary-color);
         }
         h1 {
             text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 30px;
         }
         .section {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         .field {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         label {
             font-weight: bold;
             display: block;
             margin-bottom: 5px;
+            color: var(--primary-color);
         }
         input[type="text"], input[type="email"], input[type="date"], textarea {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 10px;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
         }
         textarea {
             height: 150px;
             resize: vertical;
         }
         .btn {
-            display: block;
-            width: 200px;
-            margin: 10px auto;
-            padding: 10px;
-            background-color: #4CAF50;
+            display: inline-block;
+            width: auto;
+            min-width: 200px;
+            margin: 10px;
+            padding: 12px 20px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.1s;
+            text-align: center;
         }
         .btn:hover {
-            background-color: #45a049;
+            background-color: #3a7bc8;
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0);
         }
         @media print {
             .btn {
@@ -78,19 +114,30 @@
             border: 1px solid #888;
             width: 80%;
             max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .close {
             color: #aaa;
-            float: right;
+            float: left;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            transition: color 0.3s;
         }
         .close:hover,
         .close:focus {
-            color: black;
+            color: #000;
             text-decoration: none;
-            cursor: pointer;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            .btn {
+                width: 100%;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
