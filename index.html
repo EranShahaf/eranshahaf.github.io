@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>המלצה על מנהל/ת פורצ/ת דרך לשנת הלימודים תשפ"ה</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -242,7 +243,7 @@
             <h2>בחר אפשרות לשליחת הטופס</h2>
             <button id="gmailBtn" class="btn">פתח ב-Gmail</button>
             <button id="outlookBtn" class="btn">פתח ב-Outlook</button>
-            <button id="copyBtn" class="btn">העתק תוכן האימייל</button>
+            <button id="downloadBtn" class="btn">הורד PDF</button>
         </div>
     </div>
 
@@ -253,34 +254,67 @@
             e.preventDefault();
             
             const formData = new FormData(this);
-            const body = Array.from(formData.entries())
-                .map(([key, value]) => `${key}: ${value}`)
-                .join('\n');
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-            const subject = 'המלצה על מנהל/ת פורצ/ת דרך לשנת הלימודים תשפ"ה';
-            const recipient = 'ronenco@education.gov.il';
+            // Set RTL and font
+            doc.setR2L(true);
+            doc.setFont("arial", "normal");
+
+            // Add title
+            doc.setFontSize(18);
+            doc.text("המלצה על מנהל/ת פורצ/ת דרך לשנת הלימודים תשפ\"ה", 200, 20, null, null, "right");
+
+            // Add form data
+            doc.setFontSize(12);
+            let yPosition = 40;
+            formData.forEach((value, key) => {
+                doc.text(`${key}: ${value}`, 200, yPosition, null, null, "right");
+                yPosition += 10;
+                if (yPosition > 280) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+            });
+
+            // Generate PDF blob
+            const pdfBlob = doc.output('blob');
 
             // Show the modal
             document.getElementById('emailModal').style.display = 'block';
 
             // Gmail button
             document.getElementById('gmailBtn').onclick = function() {
-                const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipient}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.open(gmailUrl, '_blank');
+                const formData = new FormData();
+                formData.append('attachment', pdfBlob, 'recommendation.pdf');
+                
+                fetch('https://mail.google.com/mail/u/0/', {
+                    method: 'POST',
+                    body: formData
+                }).then(() => {
+                    window.open('https://mail.google.com/mail/u/0/#compose', '_blank');
+                });
             };
 
             // Outlook button
             document.getElementById('outlookBtn').onclick = function() {
-                const outlookUrl = `https://outlook.office.com/mail/deeplink/compose?to=${recipient}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.open(outlookUrl, '_blank');
+                const formData = new FormData();
+                formData.append('attachment', pdfBlob, 'recommendation.pdf');
+                
+                fetch('https://outlook.office.com/mail/deeplink/compose', {
+                    method: 'POST',
+                    body: formData
+                }).then(() => {
+                    window.open('https://outlook.office.com/mail/deeplink/compose', '_blank');
+                });
             };
 
-            // Copy content button
-            document.getElementById('copyBtn').onclick = function() {
-                const fullContent = `To: ${recipient}\nSubject: ${subject}\n\n${body}`;
-                navigator.clipboard.writeText(fullContent).then(() => {
-                    alert('תוכן האימייל הועתק ללוח. כעת תוכל להדביק אותו באפליקציית האימייל שלך.');
-                });
+            // Download button
+            document.getElementById('downloadBtn').onclick = function() {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(pdfBlob);
+                link.download = 'recommendation.pdf';
+                link.click();
             };
         });
 
