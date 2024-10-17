@@ -66,8 +66,10 @@
             box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
         }
         textarea {
-            height: 150px;
+            width: 100%;
+            min-height: 100px;
             resize: vertical;
+            overflow-y: hidden;
         }
         .btn {
             display: inline-block;
@@ -137,6 +139,15 @@
             .btn {
                 width: 100%;
                 margin: 10px 0;
+            }
+        }
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            body {
+                margin: 1cm;
             }
         }
     </style>
@@ -242,25 +253,107 @@
             e.preventDefault();
             
             const form = this;
+            const textarea = form.querySelector('textarea');
             
-            html2canvas(form).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jspdf.jsPDF();
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            if (textarea) {
+                const originalText = textarea.value;
+                const formattedText = breakLines(originalText, 80); // Adjust character limit if needed
                 
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                // Create a paragraph element to display the formatted text
+                const textParagraph = document.createElement('p');
+                textParagraph.id = 'print-text';
+                textParagraph.style.whiteSpace = 'pre-wrap';
+                textParagraph.style.wordBreak = 'break-word';
+                textParagraph.textContent = formattedText;
+                
+                // Style the paragraph to match other form fields
+                textParagraph.style.fontFamily = window.getComputedStyle(textarea).fontFamily;
+                textParagraph.style.fontSize = window.getComputedStyle(textarea).fontSize;
+                textParagraph.style.lineHeight = '1.5';
+                textParagraph.style.padding = '8px';
+                textParagraph.style.border = '1px solid #ccc';
+                textParagraph.style.borderRadius = '4px';
+                textParagraph.style.backgroundColor = '#fff';
+                textParagraph.style.minHeight = '100px';
+                textParagraph.style.width = '100%';
+                textParagraph.style.boxSizing = 'border-box';
+                
+                // Insert the paragraph after the textarea
+                textarea.parentNode.insertBefore(textParagraph, textarea.nextSibling);
                 
                 // Generate a filename based on the manager's name and current date
                 const managerName = document.getElementById('name').value;
                 const currentDate = new Date().toISOString().split('T')[0];
                 const filename = `המלצה_${managerName}_${currentDate}.pdf`;
                 
-                // Save the PDF
-                pdf.save(filename);
-            });
-        });
+                // Temporarily change the page title to set the PDF filename
+                const originalTitle = document.title;
+                document.title = filename;
+                
+                // Add print-specific styles
+                const style = document.createElement('style');
+                style.textContent = `
+                    @media print {
+                        body * { visibility: hidden; }
+                        form, form * { visibility: visible; }
+                        form { position: absolute; left: 0; top: 0; width: 100%; }
+                        textarea { display: none; }
+                        #print-text { 
+                            display: block !important;
+                            visibility: visible !important;
+                            width: 100%;
+                            font-size: 12pt;
+                            line-height: 1.5;
+                            white-space: pre-wrap;
+                            word-break: break-word;
+                            page-break-inside: avoid;
+                            border: none;
+                            padding: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                // Print the page (which allows saving as PDF)
+                window.print();
+                
+                // Restore the original title, remove the paragraph and print styles
+                setTimeout(() => {
+                    document.title = originalTitle;
+                    textParagraph.remove();
+                    document.head.removeChild(style);
+                }, 100);
+            }
+        });      
+
+        function breakLines(text, maxLength = 100) {
+            const words = text.split(' ');
+            let lines = [];
+            let currentLine = '';
+          
+            for (const word of words) {
+              if ((currentLine + word).length > maxLength) {
+                lines.push(currentLine.trim());
+                currentLine = '';
+              }
+              currentLine += word + ' ';
+            }
+            
+            if (currentLine.trim()) {
+              lines.push(currentLine.trim());
+            }
+          
+            return lines.join('\n');
+        }
+    
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+          }
+
+        document.querySelector('textarea').addEventListener('input', function() {
+            autoResize(this);
+          });
     </script>
 </body>
 </html>
