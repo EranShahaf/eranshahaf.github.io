@@ -234,23 +234,10 @@
             </div>
         </div>
 
-        <button type="button" id="printBtn" class="btn">הדפס את הטופס</button>
-        <button type="submit" id="submitBtn" class="btn">שלח טופס</button>
+        <button type="submit" id="submitBtn" class="btn">שמור כ-PDF</button>
     </form>
 
-    <div id="emailModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>בחר אפשרות לשליחת הטופס</h2>
-            <button id="gmailBtn" class="btn">פתח ב-Gmail</button>
-            <button id="outlookBtn" class="btn">פתח ב-Outlook</button>
-            <button id="copyBtn" class="btn">העתק תוכן האימייל</button>
-        </div>
-    </div>
-
     <script>
-        document.getElementById('printBtn').addEventListener('click', () => window.print());
-    
         document.getElementById('recommendationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -264,65 +251,16 @@
                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
                 
                 pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                const pdfBlob = pdf.output('blob');
-                const pdfUrl = URL.createObjectURL(pdfBlob);
                 
-                // Show the modal
-                document.getElementById('emailModal').style.display = 'block';
-    
-                const subject = encodeURIComponent('המלצה על מנהל/ת פורצ/ת דרך לשנת הלימודים תשפ"ה');
-                const recipient = 'ronenco@education.gov.il';
-                const body = encodeURIComponent('נא למצוא מצורף את טופס ההמלצה שהורד עבורך בשם recommendation_form.pdf.');
-    
-                function downloadAndOpenMail(mailUrl) {
-                    // Download the PDF
-                    const link = document.createElement('a');
-                    link.href = pdfUrl;
-                    link.download = 'recommendation_form.pdf';
-                    link.click();
-    
-                    // Open the mail client
-                    setTimeout(() => {
-                        window.open(mailUrl, '_blank');
-                        alert('הקובץ PDF הורד. אנא צרף אותו לאימייל שנפתח כעת.');
-                    }, 1000);
-                }
-    
-                // Gmail button
-                document.getElementById('gmailBtn').onclick = function() {
-                    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${recipient}&su=${subject}&body=${body}`;
-                    downloadAndOpenMail(gmailUrl);
-                };
-    
-                // Outlook button
-                document.getElementById('outlookBtn').onclick = function() {
-                    const outlookUrl = `https://outlook.office.com/mail/deeplink/compose?to=${recipient}&subject=${subject}&body=${body}`;
-                    downloadAndOpenMail(outlookUrl);
-                };
-    
-                // Download PDF button (replacing Copy content button)
-                document.getElementById('copyBtn').textContent = 'הורד PDF';
-                document.getElementById('copyBtn').onclick = function() {
-                    const link = document.createElement('a');
-                    link.href = pdfUrl;
-                    link.download = 'recommendation_form.pdf';
-                    link.click();
-                };
+                // Generate a filename based on the manager's name and current date
+                const managerName = document.getElementById('name').value;
+                const currentDate = new Date().toISOString().split('T')[0];
+                const filename = `המלצה_${managerName}_${currentDate}.pdf`;
+                
+                // Save the PDF
+                pdf.save(filename);
             });
         });
-    
-        // Close the modal when clicking on <span> (x)
-        document.querySelector('.close').onclick = function() {
-            document.getElementById('emailModal').style.display = 'none';
-        };
-    
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('emailModal')) {
-                document.getElementById('emailModal').style.display = 'none';
-            }
-        };
     </script>
-    
 </body>
 </html>
