@@ -50,5 +50,55 @@ This will generate a production build in the `build/` directory.
 - To change the logo, replace `public/images/logo/logo.jpg`.
 - For advanced slider settings, see the `GalleryCarousel` component in `src/App.js`.
 
+## Editing the Menu
+
+To add, remove, or edit menu items:
+
+1. Open the file `src/menuItems.js` in your code editor.
+2. Each menu item is an object with `name`, `price`, and `description` fields.
+3. Add a new item by adding a new object to the exported array, or edit/remove existing items as needed.
+
+**Example:**
+```js
+const menuItems = [
+  { name: 'Espresso', price: '₪8', description: 'Classic Italian espresso.' },
+  { name: 'Cappuccino', price: '₪12', description: 'Espresso with steamed milk and foam.' },
+  // Add more items below
+  { name: 'New Item', price: '₪15', description: 'Description of the new item.' },
+];
+
+export default menuItems;
+```
+
+Your changes will appear automatically in the menu modal on the site after you save the file and reload the app.
+
 ## License
-This project is for Cafe Rooka and is open for educational and demonstration purposes. 
+This project is for Cafe Rooka and is open for educational and demonstration purposes.
+
+## Deploying a React App to GitHub Pages
+
+This project (or any Create React App project) can be deployed to GitHub Pages using the `gh-pages` package.
+
+### Setup
+1. Install the gh-pages package:
+   ```bash
+   npm install --save gh-pages
+   ```
+2. In your `package.json`, add the following:
+   - A `homepage` field with your GitHub Pages URL, e.g.:
+     ```json
+     "homepage": "https://your-username.github.io/your-repo-name"
+     ```
+   - Add a `deploy` script:
+     ```json
+     "deploy": "gh-pages -d build"
+     ```
+
+### Deploying
+1. Build and deploy the app with:
+   ```bash
+   npm run deploy
+   ```
+2. Your site will be available at the URL specified in the `homepage` field.
+
+For more details, see the [Create React App deployment guide](https://create-react-app.dev/docs/deployment/#github-pages). 

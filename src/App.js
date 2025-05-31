@@ -4,8 +4,25 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import foodImages from './foodImages.json';
+import menuItems from './menuItems';
 
-function GalleryCarousel() {
+function GalleryModal({ images, isOpen, onClose }) {
+  if (!isOpen) return null;
+  return (
+    <div className="ModalOverlay" onClick={onClose}>
+      <div className="ModalContent" onClick={e => e.stopPropagation()}>
+        <button className="ModalClose" onClick={onClose}>&times;</button>
+        <div className="ModalImages">
+          {images.map((src, idx) => (
+            <img key={idx} src={src} alt={`Modal Gallery ${idx + 1}`} className="ModalImage" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GalleryCarousel({ onImageClick }) {
   const settings = {
     dots: false,
     infinite: true,
@@ -34,25 +51,53 @@ function GalleryCarousel() {
     <Slider {...settings} className="GallerySlick">
       {foodImages.map((src, idx) => (
         <div key={idx}>
-          <img src={src} alt={`Gallery ${idx + 1}`} className="GalleryCarousel-img" />
+          <img src={src} alt={`Gallery ${idx + 1}`} className="GalleryCarousel-img" onClick={onImageClick} style={{ cursor: 'pointer' }} />
         </div>
       ))}
     </Slider>
   );
 }
 
+function MenuModal({ items, isOpen, onClose }) {
+  if (!isOpen) return null;
+  return (
+    <div className="ModalOverlay" onClick={onClose}>
+      <div className="ModalContent MenuModalContent" onClick={e => e.stopPropagation()}>
+        <button className="ModalClose" onClick={onClose}>&times;</button>
+        <h2 className="MenuModalTitle">תפריט</h2>
+        <div className="MenuItems">
+          {items.map((item, idx) => (
+            <div key={idx} className="MenuItem">
+              <div className="MenuItemHeader">
+                <span className="MenuItemName">{item.name}</span>
+                <span className="MenuItemPrice">{item.price}</span>
+              </div>
+              <div className="MenuItemDesc">{item.description}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <div className="App">
       <header className="App-header">
         <img src="images/logo/logo.jpg" className="App-logo" alt="Coffee Shop Logo" />
         <h1>Cafe Rooka - קפה רוקא</h1>
         <p>עגלת קפה כפרית 🌲<br />קיבוץ עין המפרץ 📍</p>
+        <button className="MenuButton" onClick={() => setMenuOpen(true)}>תפריט</button>
       </header>
       <section className="Gallery">
         <h2>Our Food & Place</h2>
-        <GalleryCarousel />
+        <GalleryCarousel onImageClick={() => setModalOpen(true)} />
       </section>
+      <GalleryModal images={foodImages} isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+      <MenuModal items={menuItems} isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
       <section className="Contact">
         <div className="Contact-line"><span role="img" aria-label="Address">📍</span> קיבוץ עין המפרץ</div>
         <div className="Contact-line"><span role="img" aria-label="Clock">🕒</span> שישי - שבת 9:00-14:00</div>
