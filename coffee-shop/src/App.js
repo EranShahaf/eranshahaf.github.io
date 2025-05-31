@@ -54,16 +54,14 @@ function App() {
         <GalleryCarousel />
       </section>
       <section className="Contact">
-        <h2>Contact Us</h2>
-        <div className="Contact-line"><span role="img" aria-label="Phone">📞</span> ליצירת קשר: 050-2266538</div>
         <div className="Contact-line"><span role="img" aria-label="Address">📍</span> קיבוץ עין המפרץ</div>
         <div className="Contact-line"><span role="img" aria-label="Clock">🕒</span> שישי - שבת 9:00-14:00</div>
         <div className="Contact-line Contact-instagram">
           <span role="img" aria-label="Instagram">📸</span> Instagram: <a href="https://www.instagram.com/caferooka/" target="_blank" rel="noopener noreferrer">@caferooka</a>
         </div>
+        <div className="Contact-line"><span role="img" aria-label="Phone">📞</span> ליצירת קשר: 050-2266538</div>
       </section>
       <section className="Map">
-        <h2>Find Us Here</h2>
         <div className="Map-frame">
           <iframe
             title="Cafe Rooka Location"

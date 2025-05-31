@@ -1,7 +1,13 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #f7f3ef;
+  min-height: 100dvh;
+}
 .App {
   text-align: center;
   background: #f7f3ef;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .App-logo {
